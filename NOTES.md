@@ -1,5 +1,6 @@
 # Project 1: Expense Tracker — Progress Log
 
+
 Update this after each session, even briefly. Read it first thing next time
 instead of trying to remember where you left off.
 
@@ -28,3 +29,28 @@ instead of trying to remember where you left off.
 
 **Stuck on / confused about:**
 - (nothing blocking right now)
+
+
+
+## Git Cheat Sheet (my own notes)
+
+WHAT EACH COMMAND DOES:
+- git init            → start tracking this folder with git
+- git status          → check what's changed / staged / committed (run this A LOT)
+- git add .            → stage all changed files for the next commit
+- git commit -m "msg"  → save a snapshot with a description of what changed
+- git remote add origin <url>  → link local folder to a GitHub repo
+- git push -u origin main      → upload commits to GitHub
+- git checkout -b <name>       → create + switch to a new branch (for trying things safely)
+- git checkout main             → switch back to main branch
+
+RULE I LEARNED THE HARD WAY:
+- Type/paste ONE command at a time in PowerShell. Pasting several 
+  lines together can crash the terminal (PSReadLine bug) — not my fault, 
+  just restart the terminal and continue if it happens.
+
+MY STATUS:
+- ✅ git init, add, commit — done, first commit made (3 files)
+- ⏳ GitHub remote + push — in progress
+- ⏳ branching — not yet practiced
+- ⏳ Postgres/Supabase — total beginner, still to learn
