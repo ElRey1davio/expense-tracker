@@ -54,3 +54,11 @@ MY STATUS:
 - ⏳ GitHub remote + push — in progress
 - ⏳ branching — not yet practiced
 - ⏳ Postgres/Supabase — total beginner, still to learn
+
+
+## Flask + API practice — Session 1
+- Dynamic routes: <var> in @app.route(), matched in function params
+- Chained dict access: data["rates"][to_currency]
+- Read tracebacks bottom-up — find the last frame in YOUR file
+- Always check API response shape before using it (if "key" not in data)
+- Built: /convert/<from>/<to> route with graceful error handling
