@@ -28,10 +28,32 @@ def add_expense():
     data = request.json
     amount = data['amount']
     description = data['description']
-    new_expense = {"description": description, "amount": amount}
+    id_prod = len(expenses)
+    new_expense = {"id": id_prod , "description": description, "amount": amount}
     expenses.append(new_expense)
-    return f"Received expense: {description} - ${amount}"
+    return f"Received expense:{id_prod}. {description} - ${amount}"
      
+ 
+@app.route('/delete-expense/<int:expense_id>', methods=['DELETE'])
+def delete_expense(expense_id):
+    global expenses
+    expenses = [e for e in expenses if e['id'] != expense_id]
+    return f"Deleted expense {expense_id}"
+
+@app.route('/add-expense-form' , methods = ['GET'])
+def add_expense_form():
+    return render_template('add_expense.html')
+
+
+@app.route('/submit-expense' , methods = ['POST'])
+def submit_expense():
+    description = request.form["description"]
+    amount = float(request.form["amount"])
+    id_prod = len(expenses)
+    new_expense = {"id":id_prod , "description":description , "amount":amount}
+    expenses.append(new_expense)
+    return f"Expense {description} has been added"
+
     
 if __name__ == "__main__":
     app.run(debug=True)
