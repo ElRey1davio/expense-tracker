@@ -9,7 +9,7 @@ expenses = [] #standin database for now
 def index():
     lines = []
     for expense in expenses:
-        lines.append(f"{expense['description']} - ${expense['amount']}")
+        lines.append(f" {expense['id']}:  {expense['description']} - ${expense['amount']}")
     return "\n".join(lines)
 
 @app.route('/convert/<from_currency>/<to_currency>')
@@ -54,7 +54,18 @@ def submit_expense():
     expenses.append(new_expense)
     return f"Expense {description} has been added"
 
-    
+
+@app.route('/update-expense/<int:expense_id>' , methods = ["PUT"])
+def update_expense(expense_id):
+    global expenses
+    for expense in expenses:
+        if expense["id"] == expense_id:
+            data = request.json
+            expense["description"] = data["description"] 
+            expense["amount"]= data["amount"]
+
+    return f"Data updated"
+        
 if __name__ == "__main__":
     app.run(debug=True)
     
