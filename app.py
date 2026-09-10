@@ -12,10 +12,28 @@ database_url = os.environ.get("DATABASE_URL")
 
 @app.route("/", methods=["GET"])
 def index():
+    
+    #for expense in expenses:
+       
+        #lines.append(f" {expense['id']}:  {expense['description']} - ${expense['amount']}")
+    connection = psycopg2.connect(database_url)
+    cursor = connection.cursor()
+    cursor.execute("SELECT id, description, amount FROM expense;")
+    
+    rows = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+    
     lines = []
-    for expense in expenses:
-        lines.append(f" {expense['id']}:  {expense['description']} - ${expense['amount']}")
+    for row in rows:
+        id = row[0]
+        description = row[1]
+        amount = row[2]
+        lines.append(f"{id}: {description} - ${amount}")
+
     return "\n".join(lines)
+        
 
 @app.route('/convert/<from_currency>/<to_currency>')
 def convert(from_currency, to_currency):
@@ -52,8 +70,16 @@ def add_expense():
  
 @app.route('/delete-expense/<int:expense_id>', methods=['DELETE'])
 def delete_expense(expense_id):
-    global expenses
-    expenses = [e for e in expenses if e['id'] != expense_id]
+    #global expenses
+    #expenses = [e for e in expenses if e['id'] != expense_id]
+    connection = psycopg2.connect(database_url)
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM expense WHERE id = %s;", (expense_id,))
+    
+    connection.commit()
+    
+    cursor.close()
+    connection.close()
     return f"Deleted expense {expense_id}"
 
 @app.route('/add-expense-form' , methods = ['GET'])
