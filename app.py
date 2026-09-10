@@ -1,9 +1,14 @@
 import flask
 import requests
 from flask import Flask, request, render_template
+import os
+from dotenv import load_dotenv
+import psycopg2
 
 app = Flask(__name__)
 expenses = [] #standin database for now 
+load_dotenv()
+database_url = os.environ.get("DATABASE_URL")
 
 @app.route("/", methods=["GET"])
 def index():
@@ -28,10 +33,21 @@ def add_expense():
     data = request.json
     amount = data['amount']
     description = data['description']
-    id_prod = len(expenses)
+    '''id_prod = len(expenses)
     new_expense = {"id": id_prod , "description": description, "amount": amount}
-    expenses.append(new_expense)
-    return f"Received expense:{id_prod}. {description} - ${amount}"
+    expenses.append(new_expense)'''
+    
+    connection = psycopg2.connect(database_url)
+    cursor = connection.cursor()
+    
+    cursor.execute("INSERT INTO expense (description, amount) VALUES (%s, %s);",
+    (description, amount))
+    connection.commit()
+    
+    cursor.close()
+    connection.close()
+    
+    return f"Received expense: {description} - ${amount}"
      
  
 @app.route('/delete-expense/<int:expense_id>', methods=['DELETE'])
@@ -42,6 +58,7 @@ def delete_expense(expense_id):
 
 @app.route('/add-expense-form' , methods = ['GET'])
 def add_expense_form():
+
     return render_template('add_expense.html')
 
 
