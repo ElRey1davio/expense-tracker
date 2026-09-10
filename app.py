@@ -92,23 +92,48 @@ def add_expense_form():
 def submit_expense():
     description = request.form["description"]
     amount = float(request.form["amount"])
-    id_prod = len(expenses)
+    
+    connections = psycopg2.connect(database_url)
+    cursor = connections.cursor()
+    cursor.execute("INSERT INTO expense (description, amount) VALUES (%s, %s);", (description, amount))
+    
+    connections.commit()
+    
+    cursor.close()
+    connections.close()
+    return f'{description} added'    
+    '''id_prod = len(expenses)
     new_expense = {"id":id_prod , "description":description , "amount":amount}
     expenses.append(new_expense)
-    return f"Expense {description} has been added"
+    return f"Expense {description} has been added"'''
 
 
 @app.route('/update-expense/<int:expense_id>' , methods = ["PUT"])
 def update_expense(expense_id):
-    global expenses
+    '''global expenses
     for expense in expenses:
         if expense["id"] == expense_id:
             data = request.json
             expense["description"] = data["description"] 
             expense["amount"]= data["amount"]
 
-    return f"Data updated"
-        
+    return f"Data updated"'''
+    
+    data = request.json
+    description = data["description"]
+    amount = data["amount"]
+    
+    connections = psycopg2.connect(database_url)
+    cursor = connections.cursor()
+    cursor.execute("UPDATE expense SET description = %s, amount = %s WHERE id = %s;", (description,amount,expense_id))
+    
+    connections.commit()
+    
+    cursor.close()
+    connections.close()
+    return f'{expense_id} updated'  
+
+
 if __name__ == "__main__":
     app.run(debug=True)
     
